@@ -9,7 +9,9 @@ class LitstadoPantallasScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Listado de Pantallas'),),
+      appBar: AppBar(
+        title: Text('Listado de Pantallas'),
+      ),
       body: ListView(
         children: [
           ListTile(
@@ -46,9 +48,26 @@ class LitstadoPantallasScreen extends StatelessWidget {
             title: Text('ScaffoldScreen'),
             subtitle: Text('Subtitulo'),
           ),
+          ListTile(
+            onTap: () async {
+              Navigator.of(context).pushNamed(ImagenesScreen.route);
+            },
+            leading: Icon(Icons.image),
+            trailing: Icon(Icons.chevron_right),
+            title: Text('ImagesScreen'),
+            subtitle: Text('Cargando imagenes e imagenes de fondo'),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pushNamed(StatefulScreen.route);
+            },
+            leading: Icon(Icons.circle),
+            trailing: Icon(Icons.chevron_right),
+            title: Text('Stateful Screen'),
+            subtitle: Text('Manejo de estados'),
+          ),
         ],
       ),
-
     );
   }
 }
