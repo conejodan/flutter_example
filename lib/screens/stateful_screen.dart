@@ -10,12 +10,11 @@ class StatefulScreen extends StatefulWidget {
 }
 
 class _StatefulScreenState extends State<StatefulScreen> {
-  bool valor = false;
+  int navigationIndex = 0;
 
-  cambiandoValor(bool nuevoValor) {
-    print('cambiandoValor');
+  changeIndex(index) {
     setState(() {
-      valor = nuevoValor;
+      navigationIndex = index;
     });
   }
 
@@ -26,75 +25,64 @@ class _StatefulScreenState extends State<StatefulScreen> {
       appBar: AppBar(
         title: Text('Stateful Screen'),
       ),
-      body: Contenido(
-        valor: valor,
-        onChange: cambiandoValor,
+      body: Pantallas(
+        pantallaIndex: navigationIndex,
+      ),
+      bottomNavigationBar: Navegacion(
+        navigationIndex: navigationIndex,
+        changeIndex: changeIndex,
       ),
     );
   }
 }
 
-class Contenido extends StatelessWidget {
-  const Contenido({
+class Pantallas extends StatelessWidget {
+  const Pantallas({
     Key? key,
-    required this.valor,
-    this.onChange,
-  }) : super(
-          key: key,
-        );
-
-  final bool valor;
-  final Function(bool)? onChange;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [MiCard(valor: valor, onChange: onChange)],
-      ),
-    );
-  }
-}
-
-class MiCard extends StatelessWidget {
-  const MiCard({
-    Key? key,
-    required this.valor,
-    required this.onChange,
+    required this.pantallaIndex,
   }) : super(key: key);
 
-  final bool valor;
-  final Function(bool p1)? onChange;
+  final int pantallaIndex;
+
+  static const List<Widget> _pantallas = [
+    Center(
+      child: Text('Pantalla 1'),
+    ),
+    Center(
+      child: Text('Pantalla 2'),
+    ),
+    Center(
+      child: Text('Pantalla 3'),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: MiFila(valor: valor, onChange: onChange),
-      ),
-    );
+    return _pantallas[pantallaIndex];
   }
 }
 
-class MiFila extends StatelessWidget {
-  const MiFila({
+class Navegacion extends StatelessWidget {
+  const Navegacion({
     Key? key,
-    required this.valor,
-    required this.onChange,
+    required this.navigationIndex,
+    required this.changeIndex,
   }) : super(key: key);
 
-  final bool valor;
-  final Function(bool p1)? onChange;
+  final int navigationIndex;
+
+  final Function(int)? changeIndex;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Text('Desactivado / Activado'),
-        Switch(value: valor, onChanged: onChange),
+    return BottomNavigationBar(
+      onTap: changeIndex,
+      currentIndex: navigationIndex,
+      items: [
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.workspace_premium_outlined), label: 'Favoritos'),
+        BottomNavigationBarItem(icon: Icon(Icons.logout), label: 'Salir'),
       ],
     );
   }
