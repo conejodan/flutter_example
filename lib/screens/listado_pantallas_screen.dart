@@ -66,6 +66,15 @@ class LitstadoPantallasScreen extends StatelessWidget {
             title: Text('Stateful Screen'),
             subtitle: Text('Manejo de estados'),
           ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pushNamed(ProviderScreen.route);
+            },
+            leading: Icon(Icons.circle),
+            trailing: Icon(Icons.chevron_right),
+            title: Text('Provider Screen'),
+            subtitle: Text('Manejo de estados avanzado'),
+          ),
         ],
       ),
     );

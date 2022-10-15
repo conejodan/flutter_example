@@ -12,7 +12,10 @@ class StatefulScreen extends StatefulWidget {
 class _StatefulScreenState extends State<StatefulScreen> {
   int navigationIndex = 0;
 
-  changeIndex(index) {
+  changeIndex(int index) {
+    print('Se selecciono la opcion ');
+    print(index);
+
     setState(() {
       navigationIndex = index;
     });
@@ -20,6 +23,7 @@ class _StatefulScreenState extends State<StatefulScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('Se ejecuta el build');
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
@@ -27,6 +31,7 @@ class _StatefulScreenState extends State<StatefulScreen> {
       ),
       body: Pantallas(
         pantallaIndex: navigationIndex,
+        changeIndex: changeIndex,
       ),
       bottomNavigationBar: Navegacion(
         navigationIndex: navigationIndex,
@@ -37,28 +42,94 @@ class _StatefulScreenState extends State<StatefulScreen> {
 }
 
 class Pantallas extends StatelessWidget {
-  const Pantallas({
+  Pantallas({
     Key? key,
     required this.pantallaIndex,
+    required this.changeIndex,
   }) : super(key: key);
 
   final int pantallaIndex;
+  final void Function(int)? changeIndex;
 
-  static const List<Widget> _pantallas = [
-    Center(
-      child: Text('Pantalla 1'),
-    ),
-    Center(
-      child: Text('Pantalla 2'),
-    ),
-    Center(
-      child: Text('Pantalla 3'),
-    ),
-  ];
+  //List<Widget> _pantallas = [
+  //  PantallaUno(),
+  //  PantallaDos(
+  //    changeIndex: changeIndex,
+  //  ),
+  //  Center(
+  //    child: Text('Pantalla 3'),
+  //  ),
+  //];
 
   @override
   Widget build(BuildContext context) {
-    return _pantallas[pantallaIndex];
+    if (pantallaIndex == 0) {
+      return PantallaUno();
+    }
+    if (pantallaIndex == 1) {
+      return PantallaDos(changeIndex: changeIndex);
+    }
+    if (pantallaIndex == 2) {
+      return Center(
+        child: Text('Pantalla 3'),
+      );
+    }
+    return Center();
+  }
+}
+
+class PantallaDos extends StatelessWidget {
+  const PantallaDos({
+    Key? key,
+    required this.changeIndex,
+  }) : super(key: key);
+
+  final Function(int)? changeIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          changeIndex!(0);
+        },
+        child: Text('Inicio'),
+      ),
+    );
+  }
+}
+
+class PantallaUno extends StatefulWidget {
+  const PantallaUno({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<PantallaUno> createState() => _PantallaUnoState();
+}
+
+class _PantallaUnoState extends State<PantallaUno> {
+  bool _switch = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Pantalla 1'),
+          Switch(
+              value: _switch,
+              onChanged: (valor) {
+                setState(() {
+                  _switch = valor;
+                });
+                print('Elemento Switch');
+                print(_switch);
+              })
+        ],
+      ),
+    );
   }
 }
 
@@ -81,7 +152,9 @@ class Navegacion extends StatelessWidget {
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.workspace_premium_outlined), label: 'Favoritos'),
+          icon: Icon(Icons.workspace_premium_outlined),
+          label: 'Favoritos',
+        ),
         BottomNavigationBarItem(icon: Icon(Icons.logout), label: 'Salir'),
       ],
     );
