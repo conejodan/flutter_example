@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EstadosProvider with ChangeNotifier {
+  EstadosProvider() {
+    cargarUsuarios();
+  }
+
+  cargarUsuarios() async {
+    final prefs = await SharedPreferences.getInstance();
+    final personasRegistradas = prefs.getStringList('personas_registradas');
+    if (personasRegistradas != null) {
+      _personas = personasRegistradas;
+    }
+  }
+
   int _navigationIndex = 0;
 
   int get navigationIndex => _navigationIndex;
@@ -23,8 +36,10 @@ class EstadosProvider with ChangeNotifier {
 
   List<String> get personas => _personas;
 
-  personasAdd(String elemento) {
+  personasAdd(String elemento) async {
     _personas.add(elemento);
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('personas_registradas', _personas);
     notifyListeners();
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hello/providers/estados_provider.dart';
+import 'package:flutter_hello/providers/formulario_provider.dart';
 import 'package:flutter_hello/providers/tema_provider.dart';
 import 'package:flutter_hello/screens/screens.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(const MyApp());
 
@@ -13,6 +16,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: ((context) => TemaProvider())),
+        ChangeNotifierProvider(create: ((context) => FormularioProvider())),
+        ChangeNotifierProvider(create: ((context) => EstadosProvider())),
       ],
       child: ContentApp(),
     );
@@ -25,7 +30,7 @@ class ContentApp extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     final temaProvider = Provider.of<TemaProvider>(context);
     return MaterialApp(
       title: 'Material App',
@@ -39,7 +44,10 @@ class ContentApp extends StatelessWidget {
         ScaffoldScreen.route: (context) => ScaffoldScreen(),
         ImagenesScreen.route: (context) => ImagenesScreen(),
         StatefulScreen.route: (context) => StatefulScreen(),
-        ProviderScreen.route: (context) => ProviderScreen()
+        ProviderScreen.route: (context) => ProviderScreen(),
+        FormularioScreen.route: (context) => FormularioScreen(),
+        FormularioProviderScreen.route: (context) => FormularioProviderScreen(),
+        AlertScreen.route: (context) => AlertScreen(),
       },
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hello/screens/screens.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LitstadoPantallasScreen extends StatelessWidget {
   const LitstadoPantallasScreen({super.key});
@@ -75,7 +76,42 @@ class LitstadoPantallasScreen extends StatelessWidget {
             title: Text('Provider Screen'),
             subtitle: Text('Manejo de estados avanzado'),
           ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pushNamed(FormularioScreen.route);
+            },
+            leading: Icon(Icons.circle),
+            trailing: Icon(Icons.chevron_right),
+            title: Text('Formulario Screen'),
+            subtitle: Text('Manejo de datos de formulario'),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pushNamed(AlertScreen.route);
+            },
+            leading: Icon(Icons.warning),
+            trailing: Icon(Icons.chevron_right),
+            title: Text('Alert Screen'),
+            subtitle: Text('Mostrando alerta'),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pushNamed(FormularioProviderScreen.route);
+            },
+            leading: Icon(Icons.circle),
+            trailing: Icon(Icons.chevron_right),
+            title: Text('Formulario Provider Screen'),
+            subtitle: Text('Manejo de datos de formulario con provider'),
+          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final prefs = await SharedPreferences.getInstance();
+          final ultimoUsuario = prefs.getString('ultimo_usuario');
+          print("Ultimo Usuario registrado: $ultimoUsuario");
+        },
+        child: Icon(Icons.people),
       ),
     );
   }

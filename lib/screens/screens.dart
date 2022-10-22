@@ -1,4 +1,7 @@
+export 'package:flutter_hello/screens/alert_screen.dart';
 export 'package:flutter_hello/screens/container_screen.dart';
+export 'package:flutter_hello/screens/formulario_provider_screen.dart';
+export 'package:flutter_hello/screens/formulario_screen.dart';
 export 'package:flutter_hello/screens/home_screen.dart';
 export 'package:flutter_hello/screens/imagenes_screen.dart';
 export 'package:flutter_hello/screens/listado_pantallas_screen.dart';
