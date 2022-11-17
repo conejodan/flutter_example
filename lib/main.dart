@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hello/providers/devices_provider.dart';
 import 'package:flutter_hello/providers/estados_provider.dart';
 import 'package:flutter_hello/providers/formulario_provider.dart';
 import 'package:flutter_hello/providers/tema_provider.dart';
+import 'package:flutter_hello/providers/users_provider.dart';
 import 'package:flutter_hello/screens/screens.dart';
+import 'package:flutter_hello/screens/app/screens.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +21,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: ((context) => TemaProvider())),
         ChangeNotifierProvider(create: ((context) => FormularioProvider())),
         ChangeNotifierProvider(create: ((context) => EstadosProvider())),
+        ChangeNotifierProvider(create: ((context) => UsersProvider())),
+        ChangeNotifierProvider(create: ((context) => DevicesProvider())),
       ],
       child: ContentApp(),
     );
@@ -35,9 +40,19 @@ class ContentApp extends StatelessWidget {
     return MaterialApp(
       title: 'Material App',
       //home: LitstadoPantallasScreen(),
-      theme: temaProvider.modoLight ? ThemeData.light() : ThemeData.dark(),
-      initialRoute: '/',
+      //theme: temaProvider.modoLight ? ThemeData.light() : ThemeData.dark(),
+      theme: ThemeData.dark(),
+      initialRoute: LoginScreen.route,
       routes: {
+        //Pantallas de Aplicacion
+        LoginScreen.route: (context) => LoginScreen(),
+        DashboardScreen.route: (context) => DashboardScreen(),
+        UsersScreen.route: (context) => UsersScreen(),
+        UsersFormScreen.route: (context) => UsersFormScreen(),
+        DevicesScreen.route: (context) => DevicesScreen(),
+        DevicesFormScreen.route: (context) => DevicesFormScreen(),
+        DevicesDetailScreen.route: (context) => DevicesDetailScreen(),
+        //Pantallas de Ejemplos
         LitstadoPantallasScreen.route: (context) => LitstadoPantallasScreen(),
         HomeScreen.route: (context) => HomeScreen(),
         ContainerScreen.route: (context) => ContainerScreen(),

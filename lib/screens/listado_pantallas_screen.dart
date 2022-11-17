@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LitstadoPantallasScreen extends StatelessWidget {
   const LitstadoPantallasScreen({super.key});
 
-  static String route = "/";
+  static String route = "/listado-pantallas";
 
   @override
   Widget build(BuildContext context) {
