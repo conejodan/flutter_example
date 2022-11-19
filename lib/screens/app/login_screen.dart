@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hello/providers/login_form_provider.dart';
 import 'package:flutter_hello/screens/app/screens.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert' as convert;
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -102,21 +105,7 @@ class LoginForm extends StatelessWidget {
                       FocusManager.instance.primaryFocus?.unfocus();
                       if (loginProvider.validate()) {
                         final response = await loginProvider.login();
-                        if (response) {
-                          Navigator.of(context)
-                              .pushReplacementNamed(DashboardScreen.route);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Hubo un error en la solicitud",
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                              backgroundColor: Colors.red,
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        }
+                        await checkResponse(response, context);
                       }
                     },
               child: Padding(
@@ -139,5 +128,33 @@ class LoginForm extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> checkResponse(response, context) async {
+    if (response.statusCode == 200) {
+      print("Respuesta correcta");
+      var jsonResponse =
+          convert.jsonDecode(response.body) as Map<String, dynamic>;
+      print(jsonResponse);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', jsonResponse['data']['user']['token']);
+      await prefs.setString('user', jsonResponse['data']['user']);
+      await prefs.setString(
+          'username', jsonResponse['data']['user']['username']);
+      await prefs.setString('id', jsonResponse['data']['user']['id']);
+      Navigator.of(context).pushReplacementNamed(DashboardScreen.route);
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Hubo un error en la solicitud",
+            style: const TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 }
