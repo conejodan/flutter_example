@@ -137,14 +137,27 @@ class LoginForm extends StatelessWidget {
           convert.jsonDecode(response.body) as Map<String, dynamic>;
       print(jsonResponse);
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', jsonResponse['data']['user']['token']);
-      await prefs.setString('user', jsonResponse['data']['user']);
-      await prefs.setString(
-          'username', jsonResponse['data']['user']['username']);
-      await prefs.setString('id', jsonResponse['data']['user']['id']);
+      final data = jsonResponse['data'];
+      prefs.setString('token', data['token']);
+      prefs.setInt('id', data['user']['id']);
+      prefs.setString('name', data['user']['name']);
+      prefs.setString('username', data['user']['username']);
       Navigator.of(context).pushReplacementNamed(DashboardScreen.route);
-    } else {
+    } else if (response.statusCode == 401) {
+      var jsonResponse =
+          convert.jsonDecode(response.body) as Map<String, dynamic>;
       print('Request failed with status: ${response.statusCode}.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            jsonResponse["message"],
+            style: const TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

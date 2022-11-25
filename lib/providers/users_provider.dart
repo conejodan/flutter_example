@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hello/models/models.dart';
+import 'package:flutter_hello/services/my_server.dart';
 
 class UsersProvider extends ChangeNotifier {
   UsersProvider() {
@@ -25,13 +26,15 @@ class UsersProvider extends ChangeNotifier {
 
   List<User> users = [];
 
-  getUsers() async {
+  Future getUsers() async {
     print('getUsers');
-    _isLoading = true;
+    //isLoading = true;
+    await Future.delayed(Duration(seconds: 1));
+    final usersList = await MyServer().getUsers();
+    if (usersList == null) return null;
+    users = usersList;
     notifyListeners();
-    await Future.delayed(Duration(seconds: 3));
-    _isLoading = false;
-    notifyListeners();
+    //isLoading = false;
   }
 
   addUser(User user) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hello/providers/user_form_provider.dart';
 import 'package:flutter_hello/providers/users_provider.dart';
+import 'package:flutter_hello/services/my_server.dart';
 import 'package:provider/provider.dart';
 
 class UsersFormScreen extends StatelessWidget {
@@ -90,7 +91,29 @@ class UserForm extends StatelessWidget {
                           context,
                           listen: false,
                         );
-                        Navigator.of(context).pop();
+                        if (user.id == null) {
+                          // Create a new User
+                          userForm.isLoading = true;
+                          final response =
+                              await MyServer().createUser(user);
+                          if (response) {
+                            await usersProvider.getUsers();
+                            userForm.isLoading = false;
+                            Navigator.of(context).pop();
+                          }
+                        } else {
+                          // Update a User
+                          userForm.isLoading = true;
+                          final response =
+                              await MyServer().updateUser(user);
+                          if (response) {
+                            await usersProvider.getUsers();
+                            userForm.isLoading = false;
+                            Navigator.of(context).pop();
+                          }
+                          userForm.isLoading = false;
+                          // Navigator.of(context).pop();
+                        }
                       }
                     },
               child: userForm.isLoading

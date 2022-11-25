@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_hello/models/models.dart';
+import 'package:flutter_hello/services/my_server.dart';
 
 class DeviceFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -47,7 +48,18 @@ class DeviceFormProvider extends ChangeNotifier {
     var created = false;
     notifyListeners();
 
-    await Future.delayed(Duration(seconds: 2));
+    final resp = await MyServer().createDevice(device);
+    if (resp == null) return false;
+    if (resp.statusCode == 201) {
+      // final decode = jsonDecode(resp.body);
+      _message = 'Device Created';
+      created = true;
+    }
+    if (resp.statusCode == 422) {
+      final decode = jsonDecode(resp.body);
+      _errors = decode['errors'];
+      _message = 'Error Form';
+    }
     _isLoading = false;
     notifyListeners();
     return created;
@@ -57,7 +69,22 @@ class DeviceFormProvider extends ChangeNotifier {
     _isLoading = true;
     _errors = {};
     notifyListeners();
-    await Future.delayed(Duration(seconds: 2));
+
+    final resp = await MyServer().updateDevice(device);
+    if (resp == null) return false;
+    if (resp.statusCode == 200) {
+      // final decode = jsonDecode(resp.body);
+      _message = 'Device Updated';
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    }
+    if (resp.statusCode == 422) {
+      final decode = jsonDecode(resp.body);
+      _errors = decode['errors'];
+      _message = 'Error Form';
+    }
+
     _isLoading = false;
     notifyListeners();
     return false;

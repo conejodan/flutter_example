@@ -10,6 +10,12 @@ class DashboardScreen extends StatelessWidget {
 
   static String route = "/app-dashboard";
 
+  Future buscarDatos(context) async {
+    await Provider.of<UsersProvider>(context, listen: false).getUsers();
+    await Provider.of<DevicesProvider>(context, listen: false).getDevices();
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +23,17 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: const _DashboardBody(),
+      body: FutureBuilder(
+        future: buscarDatos(context),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const _DashboardBody();
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 }

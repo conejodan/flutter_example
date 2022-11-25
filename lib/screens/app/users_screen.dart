@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hello/models/models.dart';
 import 'package:flutter_hello/providers/users_provider.dart';
 import 'package:flutter_hello/screens/app/screens.dart';
+import 'package:flutter_hello/services/my_server.dart';
 import 'package:provider/provider.dart';
 
 class UsersScreen extends StatelessWidget {
@@ -19,9 +20,11 @@ class UsersScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: IconButton(
-              onPressed: () {
+              onPressed: () async {
                 print("Reload");
-                usersProvider.getUsers();
+                usersProvider.isLoading = true;
+                await usersProvider.getUsers();
+                usersProvider.isLoading = false;
               },
               icon: const Icon(
                 Icons.replay,
@@ -66,7 +69,19 @@ class UsersScreen extends StatelessWidget {
                               ),
                               ElevatedButton(
                                 onPressed: () async {
-                                  Navigator.of(context).pop();
+                                  final usersProvider =
+                                      Provider.of<UsersProvider>(context,
+                                          listen: false);
+                                  final resp =
+                                      await MyServer().enableDisableUser(user);
+                                  if (resp) {
+                                    Navigator.of(context).pop();
+                                    usersProvider.isLoading = true;
+                                    await usersProvider.getUsers();
+                                    usersProvider.isLoading = false;
+                                  } else {
+                                    print('No se actualizo');
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   primary:
