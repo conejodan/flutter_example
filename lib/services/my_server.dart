@@ -1,15 +1,21 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_hello/models/models.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:flutter_hello/models/models.dart';
 
 class MyServer {
   static String server = "192.168.100.25";
   static String portApi = "4902";
   static final String _baseUrlApi = "$server:$portApi";
   static String portSocket = "5493";
+
+  IO.Socket socket = IO.io(
+      'http://$server:$portSocket/',
+      IO.OptionBuilder()
+          .setTransports(['websocket']) // for Flutter or Dart VM
+          .disableAutoConnect()
+          .build());
 
   Future<http.Response?> login({
     String username = '',
