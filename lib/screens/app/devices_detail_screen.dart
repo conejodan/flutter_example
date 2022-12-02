@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hello/providers/devices_provider.dart';
+import 'package:flutter_hello/widgets/custom_gauge_chart.dart';
+import 'package:pretty_gauge/pretty_gauge.dart';
 import 'package:provider/provider.dart';
 
 class DevicesDetailScreen extends StatelessWidget {
@@ -99,6 +101,31 @@ class _DeviceDetail extends StatelessWidget {
                   color: led ? Colors.green : Colors.red,
                 ),
               ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            CustomGauge(
+              value: deviceProvider.lights.isNotEmpty
+                  ? deviceProvider.lights[deviceProvider.lights.length - 1]
+                  : 0.0,
+              maxValue: 1000,
+              title: 'Light',
+            ),
+            CustomGauge(
+              value: 35,
+              maxValue: 120,
+              title: 'Gass',
+              segments: [
+                GaugeSegment('Low', 20, Colors.red),
+                GaugeSegment('Low-Middle', 20, Colors.orange),
+                GaugeSegment('Middle', 20, Colors.yellow),
+                GaugeSegment('Middle', 20, Colors.green.shade200),
+                GaugeSegment('Middle', 20, Colors.green),
+                GaugeSegment('Middle', 20, Colors.green.shade900),
+              ],
             ),
           ],
         ),
