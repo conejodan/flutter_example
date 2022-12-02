@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hello/providers/devices_provider.dart';
 import 'package:flutter_hello/widgets/custom_gauge_chart.dart';
@@ -23,6 +26,13 @@ class DevicesDetailScreen extends StatelessWidget {
   }
 }
 
+class TimeSeriesData {
+  final DateTime time;
+  final int data;
+
+  TimeSeriesData({required this.time, required this.data});
+}
+
 class _DeviceDetail extends StatelessWidget {
   const _DeviceDetail({super.key});
 
@@ -38,6 +48,15 @@ class _DeviceDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<TimeSeriesData> temperatureData =
+        List.generate(15, (index) => index).reversed.toList().map((element) {
+      Random random = Random();
+      return TimeSeriesData(
+        time: DateTime.now().subtract(Duration(seconds: element * 4)),
+        data: random.nextInt(20) + 20,
+      );
+    }).toList();
+
     final deviceProvider = Provider.of<DevicesProvider>(context, listen: true);
     final bool led = deviceProvider.led;
     print("detail");
@@ -128,6 +147,60 @@ class _DeviceDetail extends StatelessWidget {
               ],
             ),
           ],
+        ),
+        Container(
+          width: 100,
+          height: 300,
+          margin: EdgeInsets.all(10),
+          child: LineChart(
+            LineChartData(
+              maxY: 40,
+              minY: 10,
+              borderData: FlBorderData(
+                show: true,
+                border: Border.all(
+                  color: Colors.white38,
+                  width: 2,
+                ),
+              ),
+              titlesData: FlTitlesData(
+                topTitles: AxisTitles(),
+                rightTitles: AxisTitles(),
+                bottomTitles: AxisTitles(
+                  drawBehindEverything: true,
+                  sideTitles: SideTitles(
+                    showTitles: false,
+                  ),
+                ),
+              ),
+              lineBarsData: [
+                LineChartBarData(
+                  barWidth: 2,
+                  belowBarData: BarAreaData(
+                    show: true,
+                    color: Color.fromARGB(55, 33, 149, 243),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(0, 104, 176, 236),
+                        Color.fromARGB(195, 33, 149, 243),
+                      ],
+                    ),
+                  ),
+                  isCurved: true,
+                  spots: temperatureData
+                      .map(
+                        (e) => FlSpot(
+                          e.time.millisecondsSinceEpoch.toDouble(),
+                          e.data.toDouble(),
+                        ),
+                      )
+                      .toList(),
+                )
+              ],
+            ),
+          ),
         ),
       ],
     );
