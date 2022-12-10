@@ -1,0 +1,10 @@
+{
+  "vsmqtt.brokerProfiles": [
+    {
+      "name": "iot",
+      "host": "localhost",
+      "port": 5493,
+      "clientId": "vsmqtt_client"
+    }
+  ]
+}

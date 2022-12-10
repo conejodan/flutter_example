@@ -5,6 +5,13 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 enum ServerStatus { online, offline, connecting }
 
+class TimeSeriesData {
+  final DateTime time;
+  final double data;
+
+  TimeSeriesData({required this.time, required this.data});
+}
+
 class DevicesProvider extends ChangeNotifier {
   DevicesProvider() {
     getDevices();
@@ -14,6 +21,7 @@ class DevicesProvider extends ChangeNotifier {
 
   List<double> temperatures = [];
   List<double> lights = [];
+  List<TimeSeriesData> lightsTimeData = [];
   bool led = true;
   ServerStatus connection = ServerStatus.offline;
   // List<Device> devices = List.generate(
@@ -76,6 +84,10 @@ class DevicesProvider extends ChangeNotifier {
       //print(data["light"]);
       int lightInt = data["light"];
       lights.add(lightInt.toDouble());
+      lightsTimeData.add(TimeSeriesData(
+        time: DateTime.now(),
+        data: lightInt.toDouble(),
+      ));
       notifyListeners();
     });
     socket?.connect();

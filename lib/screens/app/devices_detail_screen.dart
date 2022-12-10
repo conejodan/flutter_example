@@ -49,11 +49,11 @@ class _DeviceDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<TimeSeriesData> temperatureData =
-        List.generate(15, (index) => index).reversed.toList().map((element) {
+        List.generate(50, (index) => index).reversed.toList().map((element) {
       Random random = Random();
       return TimeSeriesData(
         time: DateTime.now().subtract(Duration(seconds: element * 4)),
-        data: random.nextInt(20) + 20,
+        data: random.nextInt(20) + 10,
       );
     }).toList();
 
@@ -130,7 +130,7 @@ class _DeviceDetail extends StatelessWidget {
               value: deviceProvider.lights.isNotEmpty
                   ? deviceProvider.lights[deviceProvider.lights.length - 1]
                   : 0.0,
-              maxValue: 1000,
+              maxValue: 100,
               title: 'Light',
             ),
             CustomGauge(
@@ -154,8 +154,8 @@ class _DeviceDetail extends StatelessWidget {
           margin: EdgeInsets.all(10),
           child: LineChart(
             LineChartData(
-              maxY: 40,
-              minY: 10,
+              //maxY: 40,
+              minY: 0,
               borderData: FlBorderData(
                 show: true,
                 border: Border.all(
@@ -188,8 +188,8 @@ class _DeviceDetail extends StatelessWidget {
                       ],
                     ),
                   ),
-                  isCurved: true,
-                  spots: temperatureData
+                  isCurved: false,
+                  spots: deviceProvider.lightsTimeData
                       .map(
                         (e) => FlSpot(
                           e.time.millisecondsSinceEpoch.toDouble(),

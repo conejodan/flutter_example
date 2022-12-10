@@ -42,6 +42,8 @@ dependencies:
   socket_io_client: ^2.0.0
   pretty_gauge: ^1.0.1
   fl_chart: ^0.55.2
+  flutter_launcher_icons: ^0.11.0
+  flutter_native_splash: ^2.2.16
   
 
 dev_dependencies:
@@ -54,6 +56,16 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
+  adaptive_icon_background: "assets/icon/icon.png"
+
+flutter_native_splash:
+  image: assets/splashscreen/splashscreen.png
+  color: "#ffffff"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
